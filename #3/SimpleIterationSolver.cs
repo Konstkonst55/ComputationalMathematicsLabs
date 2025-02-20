@@ -33,7 +33,7 @@
 
                 for (int j = 0; j < size; j++)
                 {
-                    iterationMatrix[i, j] = i == j ? 0 : -coefficientsMatrix[i, j] / diagonalElement;
+                    iterationMatrix[i, j] = i == j ? 1 : coefficientsMatrix[i, j] / diagonalElement;
                 }
 
                 iterationVector[i] = constantsVector[i] / diagonalElement;
@@ -46,7 +46,13 @@
             double[] previousSolution = new double[size];
             double[] currentSolution = new double[size];
 
-            Console.WriteLine("Начальный вектор x:");
+            Console.WriteLine("Матрица итераций C (с единичной диагональю):");
+            PrintMatrix(iterationMatrix);
+
+            Console.WriteLine("\nВектор правой части B:");
+            PrintVector(iterationVector);
+
+            Console.WriteLine("\nНачальный вектор x:");
             PrintVector(previousSolution);
 
             for (int iteration = 0; iteration < maxIterations; iteration++)
@@ -57,7 +63,10 @@
 
                     for (int j = 0; j < size; j++)
                     {
-                        currentSolution[i] += iterationMatrix[i, j] * previousSolution[j];
+                        if (i != j)
+                        {
+                            currentSolution[i] -= iterationMatrix[i, j] * previousSolution[j];
+                        }
                     }
                 }
 
@@ -95,6 +104,22 @@
             for (int i = 0; i < vector.Length; i++)
             {
                 Console.WriteLine($"x[{i}] = {vector[i]:F6}");
+            }
+        }
+
+        private void PrintMatrix(double[,] matrix)
+        {
+            int rows = matrix.GetLength(0);
+            int cols = matrix.GetLength(1);
+
+            for (int i = 0; i < rows; i++)
+            {
+                for (int j = 0; j < cols; j++)
+                {
+                    Console.Write($"{matrix[i, j],8:F4} ");
+                }
+
+                Console.WriteLine();
             }
         }
     }
