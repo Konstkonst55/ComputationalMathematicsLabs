@@ -2,12 +2,12 @@
 {
     internal class SimpleIterationSolver
     {
-        private double[,] coefficientsMatrix; // A
-        private double[] constantsVector;     // b
-        private double[,] iterationMatrix;    // C
-        private double[] iterationVector;     // B
-        private double epsilon;
-        private int maxIterations;
+        protected double[,] coefficientsMatrix; // A
+        protected double[] constantsVector;     // b
+        protected double[,] iterationMatrix;    // C
+        protected double[] iterationVector;     // B
+        protected double epsilon;
+        protected int maxIterations;
 
         public SimpleIterationSolver(double[,] matrix, double[] results, double epsilon = 1e-4, int maxIterations = 100)
         {
@@ -40,7 +40,7 @@
             }
         }
 
-        public void Solve()
+        virtual public void Solve()
         {
             int size = coefficientsMatrix.GetLength(0);
             double[] previousSolution = new double[size];
@@ -86,7 +86,7 @@
             Console.WriteLine("\nДостигнуто максимальное число итераций.");
         }
 
-        private bool HasConverged(double[] oldSolution, double[] newSolution)
+        protected bool HasConverged(double[] oldSolution, double[] newSolution)
         {
             for (int i = 0; i < oldSolution.Length; i++)
             {
@@ -99,7 +99,7 @@
             return true;
         }
 
-        private void PrintVector(double[] vector)
+        protected void PrintVector(double[] vector)
         {
             for (int i = 0; i < vector.Length; i++)
             {
@@ -107,7 +107,7 @@
             }
         }
 
-        private void PrintMatrix(double[,] matrix)
+        protected void PrintMatrix(double[,] matrix)
         {
             int rows = matrix.GetLength(0);
             int cols = matrix.GetLength(1);
