@@ -10,14 +10,9 @@
             int size = coefficientsMatrix.GetLength(0);
             double[] currentSolution = new double[size];
 
-            Console.WriteLine("\nМатрица коэффициентов:");
-            PrintMatrix(coefficientsMatrix);
-
-            Console.WriteLine("\nВектор правой части:");
-            PrintVector(constantsVector);
-
-            Console.WriteLine("\nНачальный вектор x:");
-            PrintVector(currentSolution);
+            PrintMatrix(iterationMatrix, "\nМатрица итераций C:");
+            PrintVector(iterationVector, "\nВектор правой части B:");
+            PrintVector(currentSolution, "\nНачальный вектор x:");
 
             for (int iteration = 0; iteration < maxIterations; iteration++)
             {
@@ -25,26 +20,24 @@
 
                 for (int i = 0; i < size; i++)
                 {
-                    double sum = constantsVector[i];
+                    double sum = iterationVector[i];
 
                     for (int j = 0; j < size; j++)
                     {
                         if (i != j)
                         {
-                            sum -= coefficientsMatrix[i, j] * currentSolution[j];
+                            sum += iterationMatrix[i, j] * currentSolution[j];
                         }
                     }
 
-                    currentSolution[i] = sum / coefficientsMatrix[i, i];
+                    currentSolution[i] = sum;
                 }
 
-                Console.WriteLine($"\nШаг {iteration + 1}:");
-                PrintVector(currentSolution);
+                PrintSolutionStep(iteration, currentSolution);
 
                 if (HasConverged(previousSolution, currentSolution))
                 {
-                    Console.WriteLine("\nРешение найдено:");
-                    PrintVector(currentSolution);
+                    PrintVector(currentSolution, "\nРешение найдено:");
                     return;
                 }
             }
@@ -52,4 +45,5 @@
             Console.WriteLine("\nДостигнуто максимальное число итераций.");
         }
     }
+
 }

@@ -40,20 +40,15 @@
             }
         }
 
-        virtual public void Solve()
+        public virtual void Solve()
         {
             int size = coefficientsMatrix.GetLength(0);
             double[] previousSolution = new double[size];
             double[] currentSolution = new double[size];
 
-            Console.WriteLine("Матрица итераций C (с единичной диагональю):");
-            PrintMatrix(iterationMatrix);
-
-            Console.WriteLine("\nВектор правой части B:");
-            PrintVector(iterationVector);
-
-            Console.WriteLine("\nНачальный вектор x:");
-            PrintVector(previousSolution);
+            PrintMatrix(iterationMatrix, "\nМатрица итераций C:");
+            PrintVector(iterationVector, "\nВектор правой части B:");
+            PrintVector(previousSolution, "\nНачальный вектор x:");
 
             for (int iteration = 0; iteration < maxIterations; iteration++)
             {
@@ -65,18 +60,16 @@
                     {
                         if (i != j)
                         {
-                            currentSolution[i] -= iterationMatrix[i, j] * previousSolution[j];
+                            currentSolution[i] += iterationMatrix[i, j] * previousSolution[j];
                         }
                     }
                 }
 
-                Console.WriteLine($"\nШаг {iteration + 1}:");
-                PrintVector(currentSolution);
+                PrintSolutionStep(iteration, currentSolution);
 
                 if (HasConverged(previousSolution, currentSolution))
                 {
-                    Console.WriteLine("\nРешение найдено:");
-                    PrintVector(currentSolution);
+                    PrintVector(currentSolution, "\nРешение найдено:");
                     return;
                 }
 
@@ -99,18 +92,28 @@
             return true;
         }
 
-        protected void PrintVector(double[] vector)
+        protected void PrintSolutionStep(int iteration, double[] solution)
         {
+            Console.WriteLine($"\nШаг {iteration + 1}:");
+            PrintVector(solution);
+        }
+
+        protected void PrintVector(double[] vector, string header = "")
+        {
+            Console.WriteLine(header);
+
             for (int i = 0; i < vector.Length; i++)
             {
                 Console.WriteLine($"x[{i}] = {vector[i]:F6}");
             }
         }
 
-        protected void PrintMatrix(double[,] matrix)
+        protected void PrintMatrix(double[,] matrix, string header = "")
         {
             int rows = matrix.GetLength(0);
             int cols = matrix.GetLength(1);
+
+            Console.WriteLine(header);
 
             for (int i = 0; i < rows; i++)
             {
