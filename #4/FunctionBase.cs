@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace _4
+﻿namespace _4
 {
     public abstract class FunctionBase
     {
@@ -23,5 +17,4 @@ namespace _4
 
         protected string Round(double value) => value.ToString($"F{_precision}");
     }
-
 }
