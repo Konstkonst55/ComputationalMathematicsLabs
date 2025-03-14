@@ -18,7 +18,7 @@
 
             double[] initialGuess = { 2, 1 };
 
-            NewtonMethodInverse solver = new NewtonMethodInverse(functions, jacobian);
+            NewtonMethodInverse solver = new NewtonMethodGaussian(functions, jacobian);
             solver.Solve(initialGuess);
         }
     }
