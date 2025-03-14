@@ -1,6 +1,6 @@
 ﻿namespace _1
 {
-    internal class GaussianElimination
+    public class GaussianElimination
     {
         protected int size;
         protected double[,] matrix;
@@ -87,5 +87,4 @@
             }
         }
     }
-
 }

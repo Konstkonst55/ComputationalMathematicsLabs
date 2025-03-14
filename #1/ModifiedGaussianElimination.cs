@@ -1,6 +1,6 @@
 ﻿namespace _1
 {
-    internal class ModifiedGaussianElimination : GaussianElimination
+    public class ModifiedGaussianElimination : GaussianElimination
     {
         public ModifiedGaussianElimination(double[,] inputMatrix, double[] inputResults)
             : base(inputMatrix, inputResults) { }

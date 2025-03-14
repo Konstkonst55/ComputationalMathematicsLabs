@@ -1,6 +1,6 @@
 ﻿namespace _3
 {
-    internal class SeidelSolver : SimpleIterationSolver
+    public class SeidelSolver : SimpleIterationSolver
     {
         public SeidelSolver(double[,] matrix, double[] results, double epsilon = 1e-4, int maxIterations = 100)
             : base(matrix, results, epsilon, maxIterations) { }
@@ -45,5 +45,4 @@
             Console.WriteLine("\nДостигнуто максимальное число итераций.");
         }
     }
-
 }

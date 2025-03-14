@@ -1,6 +1,6 @@
 ﻿namespace _2
 {
-    internal class NumberWithError
+    public class NumberWithError
     {
         public double Value { get; }
         public double Error { get; }

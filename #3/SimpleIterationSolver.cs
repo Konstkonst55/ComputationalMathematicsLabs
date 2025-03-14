@@ -1,6 +1,6 @@
 ﻿namespace _3
 {
-    internal class SimpleIterationSolver
+    public class SimpleIterationSolver
     {
         protected double[,] coefficientsMatrix; // A
         protected double[] constantsVector;     // b
