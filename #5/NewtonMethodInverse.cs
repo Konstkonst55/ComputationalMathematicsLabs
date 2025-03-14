@@ -2,8 +2,8 @@
 {
     public class NewtonMethodInverse : FunctionBase
     {
-        private readonly Func<double[], double[]> _functions;
-        private readonly Func<double[], double[,]> _jacobian;
+        protected readonly Func<double[], double[]> _functions;
+        protected readonly Func<double[], double[,]> _jacobian;
 
         public NewtonMethodInverse(Func<double[], double[]> functions, Func<double[], double[,]> jacobian, double tolerance = 1e-6)
             : base(tolerance)
@@ -12,9 +12,10 @@
             _jacobian = jacobian;
         }
 
-        public void Solve(double[] initialGuess, int maxIterations = 10)
+        virtual public void Solve(double[] initialGuess, int maxIterations = 10)
         {
             double[] x = (double[])initialGuess.Clone();
+            double[] prevX = new double[x.Length];
 
             Console.WriteLine($"Начальное приближение: ({Round(x[0])}, {Round(x[1])})\n");
 
@@ -33,7 +34,6 @@
                 if (Math.Abs(det) < _tolerance)
                 {
                     Console.WriteLine("Якобиан вырожден, метод не может продолжаться.");
-
                     return;
                 }
 
@@ -45,21 +45,30 @@
 
                 Console.WriteLine($"W^(-1)(x^{iter}) = \n[{Round(wInv[0, 0])}, {Round(wInv[0, 1])}]\n[{Round(wInv[1, 0])}, {Round(wInv[1, 1])}]\n");
 
-                double[] deltaX = new double[2]
+                double[] deltaX = 
                 {
                     wInv[0, 0] * F[0] + wInv[0, 1] * F[1],
                     wInv[1, 0] * F[0] + wInv[1, 1] * F[1]
                 };
 
+                prevX[0] = x[0];
+                prevX[1] = x[1];
+
                 x[0] -= deltaX[0];
                 x[1] -= deltaX[1];
 
-                Console.WriteLine($"x^{iter + 1} = ({Round(x[0])}, {Round(x[1])})\n");
+                double[] epsilon =
+                {
+                    Math.Abs(x[0] - prevX[0]),
+                    Math.Abs(x[1] - prevX[1])
+                };
 
-                if (Math.Abs(deltaX[0]) < _tolerance && Math.Abs(deltaX[1]) < _tolerance)
+                Console.WriteLine($"x^{iter + 1} = ({Round(x[0])}, {Round(x[1])})");
+                Console.WriteLine($"E = ({epsilon[0]}, {epsilon[1]})\n");
+
+                if (epsilon[0] < _tolerance && epsilon[1] < _tolerance)
                 {
                     Console.WriteLine($"Решение найдено: ({Round(x[0])}, {Round(x[1])})");
-
                     return;
                 }
             }
