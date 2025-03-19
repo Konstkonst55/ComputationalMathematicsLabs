@@ -11,7 +11,7 @@ namespace _6
             _points = new Dictionary<double, double>(dataPoints);
         }
 
-        public double Compute(double x)
+        public double Compute(double x, bool useWrite = true)
         {
             double result = 0;
             var xValues = _points.Keys.ToList();
@@ -27,12 +27,12 @@ namespace _6
                     if (i != j)
                     {
                         term *= (x - xValues[j]) / (xValues[i] - xValues[j]);
-                        Console.Write($"(x - {xValues[j]}) / ({xValues[i]} - {xValues[j]}) * ");
+                        if (useWrite) Console.Write($"(x - {xValues[j]}) / ({xValues[i]} - {xValues[j]}) * ");
                     }
                 }
 
                 result += term;
-                Console.WriteLine($"{yValues[i]} -> {term}");
+                if (useWrite) Console.WriteLine($"{yValues[i]} -> {term}");
             }
 
             return result;

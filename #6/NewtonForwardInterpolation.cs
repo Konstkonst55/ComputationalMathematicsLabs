@@ -10,13 +10,13 @@ namespace _6
     {
         public NewtonForwardInterpolation(Dictionary<double, double> dataPoints) : base(dataPoints) { }
 
-        public double Compute(double x)
+        public double Compute(double x, bool useWrite = true)
         {
             List<double> xValues = new List<double>(points.Keys);
             double h = xValues[1] - xValues[0];
             double q = (x - xValues[0]) / h;
 
-            Console.WriteLine($"q = ({x} - {xValues[0]}) / {h} = {q:F6}");
+            if (useWrite) Console.WriteLine($"q = ({x} - {xValues[0]}) / {h} = {q:F6}");
 
             double result = differenceTable[0, 0];
             double term = 1;
@@ -27,7 +27,7 @@ namespace _6
                 double addTerm = differenceTable[0, i] * term;
                 result += addTerm;
 
-                Console.WriteLine($"Шаг {i}: {differenceTable[0, i]:F6} / {Factorial(i)} * {term:F6} = {addTerm:F6}");
+                if (useWrite) Console.WriteLine($"Шаг {i}: {differenceTable[0, i]:F6} / {Factorial(i)} * {term:F6} = {addTerm:F6}");
             }
 
             return result;

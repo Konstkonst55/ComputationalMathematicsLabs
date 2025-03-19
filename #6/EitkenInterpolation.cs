@@ -15,7 +15,7 @@ namespace _6
             _points = new Dictionary<double, double>(dataPoints);
         }
 
-        public double Compute(double x)
+        public double Compute(double x, bool useWrite = true)
         {
             int n = _points.Count;
             List<double> xValues = new List<double>(_points.Keys);
@@ -34,7 +34,7 @@ namespace _6
                 {
                     p[i, j] = ((x - xValues[i + j]) * p[i, j - 1] - (x - xValues[i]) * p[i + 1, j - 1]) / (xValues[i] - xValues[i + j]);
 
-                    Console.WriteLine($"P[{i},{j}] = (({x} - {xValues[i + j]}) * {p[i, j - 1]:F6} - ({x} - {xValues[i]}) * {p[i + 1, j - 1]:F6}) / ({xValues[i]} - {xValues[i + j]}) = {p[i, j]:F6}");
+                    if (useWrite) Console.WriteLine($"P[{i},{j}] = (({x} - {xValues[i + j]}) * {p[i, j - 1]:F6} - ({x} - {xValues[i]}) * {p[i + 1, j - 1]:F6}) / ({xValues[i]} - {xValues[i + j]}) = {p[i, j]:F6}");
                 }
             }
 
