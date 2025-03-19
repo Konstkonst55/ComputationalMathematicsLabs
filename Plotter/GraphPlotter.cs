@@ -60,7 +60,7 @@ namespace Plotter
             _plt.Add.Scatter([x], new double[] { y });
         }
 
-        public void Save(string filePath = "../graph.png")
+        public void Save(string filePath = "graph.png")
         {
             _plt.Title(_title);
             _plt.XLabel(_xLabel);
