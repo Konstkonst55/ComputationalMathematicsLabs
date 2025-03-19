@@ -7,26 +7,26 @@
 
         public override void Solve()
         {
-            int size = coefficientsMatrix.GetLength(0);
+            int size = _coefficientsMatrix.GetLength(0);
             double[] currentSolution = new double[size];
 
-            PrintMatrix(iterationMatrix, "\nМатрица итераций C:");
-            PrintVector(iterationVector, "\nВектор правой части B:");
+            PrintMatrix(_iterationMatrix, "\nМатрица итераций C:");
+            PrintVector(_iterationVector, "\nВектор правой части B:");
             PrintVector(currentSolution, "\nНачальный вектор x:");
 
-            for (int iteration = 0; iteration < maxIterations; iteration++)
+            for (int iteration = 0; iteration < _maxIterations; iteration++)
             {
                 double[] previousSolution = (double[])currentSolution.Clone();
 
                 for (int i = 0; i < size; i++)
                 {
-                    double sum = iterationVector[i];
+                    double sum = _iterationVector[i];
 
                     for (int j = 0; j < size; j++)
                     {
                         if (i != j)
                         {
-                            sum += iterationMatrix[i, j] * currentSolution[j];
+                            sum += _iterationMatrix[i, j] * currentSolution[j];
                         }
                     }
 
