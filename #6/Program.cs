@@ -53,12 +53,12 @@ namespace _6
             Console.WriteLine("\nПервая формула Ньютона:\n");
             Console.WriteLine("Таблица конечных разностей:");
             forwardInterpolation.PrintDifferenceTable();
-            resultForward = forwardInterpolation.Compute(nxTarget);
-            Console.WriteLine($"\nРезультат первой формулы Ньютона: P({nxTarget}) = {resultForward:F6}");
+            resultForward = forwardInterpolation.Compute(xTarget);
+            Console.WriteLine($"\nРезультат первой формулы Ньютона: P({xTarget}) = {resultForward:F6}");
 
             Console.WriteLine("\nВторая формула Ньютона:\n");
-            resultBackward = backwardInterpolation.Compute(nxTarget);
-            Console.WriteLine($"\nРезультат второй формулы Ньютона: P({nxTarget}) = {resultBackward:F6}");
+            resultBackward = backwardInterpolation.Compute(xTarget);
+            Console.WriteLine($"\nРезультат второй формулы Ньютона: P({xTarget}) = {resultBackward:F6}");
 
             GenerateGraph();
         }
