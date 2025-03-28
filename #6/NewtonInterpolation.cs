@@ -59,15 +59,34 @@ namespace _6
             int n = _points.Count;
             List<double> xValues = new List<double>(_points.Keys);
 
-            Console.WriteLine("x\ty\t\tdy\t\td2y\t\td3y");
+            int columnWidth = Math.Max("x".Length, "y".Length);
 
             for (int i = 0; i < n; i++)
             {
-                Console.Write($"{xValues[i]}\t");
+                columnWidth = Math.Max(columnWidth, xValues[i].ToString("F6").Length);
+            }
+
+            for (int i = 0; i < n; i++)
+            {
+                columnWidth = Math.Max(columnWidth, _differenceTable[i, 0].ToString("F6").Length);
+            }
+
+            string header = "x".PadRight(columnWidth) + "\t" + "y".PadRight(columnWidth);
+
+            for (int i = 1; i < n; i++)
+            {
+                header += $"\t{($"d{(i == 1 ? "" : i)}y").PadRight(columnWidth)}";
+            }
+
+            Console.WriteLine(header);
+
+            for (int i = 0; i < n; i++)
+            {
+                Console.Write($"{xValues[i].ToString("F6").PadRight(columnWidth)}\t");
 
                 for (int j = 0; j < n - i; j++)
                 {
-                    Console.Write($"{_differenceTable[i, j]:F6}\t");
+                    Console.Write($"{_differenceTable[i, j]:F6}".PadRight(columnWidth) + "\t");
                 }
 
                 Console.WriteLine();
@@ -75,5 +94,6 @@ namespace _6
 
             Console.WriteLine();
         }
+
     }
 }
