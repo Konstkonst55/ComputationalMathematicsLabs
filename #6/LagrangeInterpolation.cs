@@ -1,38 +1,29 @@
-﻿using static SkiaSharp.HarfBuzz.SKShaper;
-
-namespace _6
+﻿namespace _6
 {
-    public class LagrangeInterpolation
+    public class LagrangeInterpolation : InterpolationBase
     {
-        private Dictionary<double, double> _points;
-
-        public LagrangeInterpolation(Dictionary<double, double> dataPoints)
-        {
-            _points = new Dictionary<double, double>(dataPoints);
-        }
+        public LagrangeInterpolation(List<(double x, double y)> dataPoints)
+            : base(dataPoints) { }
 
         public double Compute(double x, bool useWrite = true)
         {
             double result = 0;
-            var xValues = _points.Keys.ToList();
-            var yValues = _points.Values.ToList();
-            int n = xValues.Count;
 
-            for (int i = 0; i < n; i++)
+            for (int i = 0; i < PointsCount; i++)
             {
-                double term = yValues[i];
+                double term = _points[i].y;
 
-                for (int j = 0; j < n; j++)
+                for (int j = 0; j < PointsCount; j++)
                 {
                     if (i != j)
                     {
-                        term *= (x - xValues[j]) / (xValues[i] - xValues[j]);
-                        if (useWrite) Console.Write($"(x - {xValues[j]}) / ({xValues[i]} - {xValues[j]}) * ");
+                        term *= (x - _points[j].x) / (_points[i].x- _points[j].x);
+                        if (useWrite) Console.Write($"(x - {_points[j].x}) / ({_points[i].x} - {_points[j].x}) * ");
                     }
                 }
 
                 result += term;
-                if (useWrite) Console.WriteLine($"{yValues[i]} -> {term}");
+                if (useWrite) Console.WriteLine($"{_points[i].y} -> {term}");
             }
 
             return result;
@@ -44,7 +35,7 @@ namespace _6
             double factorial = 24.0;
             double product = 1;
 
-            foreach (var xi in _points.Keys)
+            foreach (var (xi, _) in _points)
             {
                 product *= (x - xi);
             }
@@ -54,12 +45,13 @@ namespace _6
 
         public void SolveAndPrint(double x)
         {
+            Console.WriteLine("\nЛагранж:\n");
+
             double interpolatedValue = Compute(x);
             double truncationError = ComputeTruncationError(x);
             double roundError = 5e-5;
             double realError = truncationError + roundError;
 
-            Console.WriteLine();
             Console.WriteLine($"Значение в x = {x}: {interpolatedValue:F4}");
             Console.WriteLine($"Погрешность усечения: {truncationError:F6}");
             Console.WriteLine($"Погрешность округления: {roundError:F6}");

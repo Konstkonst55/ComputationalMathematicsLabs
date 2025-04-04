@@ -39,20 +39,20 @@ namespace PlotterForms
             formsPlot.Render();
         }
 
-        public void PlotPoints(List<(double x, double y)> points)
+        public void PlotPoints(GraphParameters param)
         {
             CenterAxes();
 
-            double[] xs = points.Select(p => p.x).ToArray();
-            double[] ys = points.Select(p => p.y).ToArray();
+            double[] xs = param.Points.Select(p => p.x).ToArray();
+            double[] ys = param.Points.Select(p => p.y).ToArray();
 
-            formsPlot.Plot.AddScatter(xs, ys);
+            formsPlot.Plot.AddScatter(xs, ys, markerSize: param.MarkerSize, lineWidth: param.LineWidth, color: param.Color);
             formsPlot.Render();
         }
 
-        public void PlotSinglePoint(double x, double y)
+        public void PlotSinglePoint(double x, double y, float markerSize = 5)
         {
-            formsPlot.Plot.AddPoint(x, y, Color.Red, 10);
+            formsPlot.Plot.AddPoint(x, y, Color.Red, markerSize);
             formsPlot.Render();
         }
     }

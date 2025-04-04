@@ -1,5 +1,5 @@
-﻿using Plotter;
-using System.Drawing;
+﻿using PlotterForms;
+using Shared;
 
 namespace _6
 {
@@ -7,36 +7,32 @@ namespace _6
     {
         static Func<double, double> function = Math.Sqrt;
 
-        static Dictionary<double, double> dataPoints = FillDataPoints();
+        const double xMin = 1.0, step = 1.0, xTarget = 2.56;
+        const int xCount = 4;
 
-        const double xTarget = 2.56, step = 1.0, xMin = 1.0, xMax = 4.0;
+        static List<(double x, double y)> dataPoints = ListUtils.FillDataPoints(function, xMin, step, xCount);
 
-        static LagrangeInterpolation lagrangeInterpolator;
-        static EitkenInterpolation eitkenInterpolator;
-        static NewtonForwardInterpolation forwardInterpolation;
-        static NewtonBackwardInterpolation backwardInterpolation;
+        static LagrangeInterpolation? lagrangeInterpolator;
+        static EitkenInterpolation? eitkenInterpolator;
+        static NewtonForwardInterpolation? forwardInterpolation;
+        static NewtonBackwardInterpolation? backwardInterpolation;
 
-        static double resultLagrange;
-        static double resultEitken;
-        static double resultForward;
-        static double resultBackward;
-
+        [STAThread]
         static void Main()
         {
-            PrintDictionaryAsTable(dataPoints, "Исходная функция:");
+            double resultForward;
+            double resultBackward;
 
-            lagrangeInterpolator = new LagrangeInterpolation(dataPoints);
-            eitkenInterpolator = new EitkenInterpolation(dataPoints);
-            forwardInterpolation = new NewtonForwardInterpolation(dataPoints);
-            backwardInterpolation = new NewtonBackwardInterpolation(dataPoints);
+            Printer.PrintListAsTable(dataPoints, "Исходная функция:");
 
-            Console.WriteLine("Лагранж:\n");
-            resultLagrange = lagrangeInterpolator.Compute(xTarget);
-            Console.WriteLine($"P({xTarget}) = {resultLagrange:F6}");
+            lagrangeInterpolator = new(dataPoints);
+            eitkenInterpolator = new(dataPoints);
+            forwardInterpolation = new(dataPoints);
+            backwardInterpolation = new(dataPoints);
 
-            Console.WriteLine("\nЭйткен:\n");
-            resultEitken = eitkenInterpolator.Compute(xTarget);
-            Console.WriteLine($"P({xTarget}) = {resultEitken:F6}");
+            lagrangeInterpolator.SolveAndPrint(xTarget);
+
+            eitkenInterpolator.SolveAndPrint(xTarget);
 
             Console.WriteLine("\nПервая формула Ньютона:\n");
             Console.WriteLine("Таблица конечных разностей:");
@@ -51,48 +47,41 @@ namespace _6
             GenerateGraph();
         }
 
-        static Dictionary<double, double> FillDataPoints() => Enumerable.Range(0, (int)((xMax - xMin) / step) + 1).Select(i => xMin + i * step).ToDictionary(x => x, x => function(x));
-
         static void GenerateGraph()
         {
-            var plotter = new GraphPlotter(new Size(800, 600));
-            plotter.SetTitle("Интерполяция: Лагранж, Эйткен, Ньютон");
-            plotter.SetLabels("X", "Y");
+            List<(double x, double y)> xyValues = new();
+            const double axisLimit = 100, step = 0.5;
 
-            var xData = dataPoints.Keys.ToList();
-            var yData = dataPoints.Values.ToList();
-            var xValues = new List<double>();
-
-            for (double x = 0; x <= 6.0; x += 0.2)
+            for (double x = -axisLimit; x <= axisLimit; x += step)
             {
-                xValues.Add(x);
+                double y = lagrangeInterpolator!.Compute(x, false);
+                xyValues.Add((x, y));
             }
 
-            var yLagrange = xValues.Select(x => lagrangeInterpolator.Compute(x, false)).ToList();
+            double minX = dataPoints.Min(p => p.x);
+            double maxX = dataPoints.Max(p => p.x);
 
-            plotter.AddData(xValues, yLagrange, "Лагранж", scatter: true);
-            plotter.AddData(xData, yData, "Исходные точки", scatter: true);
-            plotter.AddPoint(xTarget, resultLagrange, "P(xTarget)");
-
-            plotter.Save("C:\\Users\\Admin\\Desktop\\interpolation_graph.png");
-        }
-
-        static void PrintDictionaryAsTable(Dictionary<double, double> dict, string title = "")
-        {
-            if (title.Length > 0)
+            List<(double x, double y)> limitsLeft = new()
             {
-                Console.WriteLine(title + "\n");
-            }
+                (minX, axisLimit),
+                (minX, -axisLimit)
+            };
 
-            Console.WriteLine("{0,-15} {1,-15}", "X", "Y");  
-            Console.WriteLine(new string('-', 30)); 
-  
-            foreach (var kvp in dict)
+            List<(double x, double y)> limitsRight = new()
             {
-                Console.WriteLine("{0,-15:F2} {1,-15:F6}", kvp.Key, kvp.Value);
-            }
+                (maxX, axisLimit),
+                (maxX, -axisLimit)
+            };
 
-            Console.WriteLine();
+            List<GraphParameters> graphData = new()
+            {
+                new(xyValues, 0, 3, Color.Red),
+                new(dataPoints, 0, 3, Color.Blue),
+                new(limitsLeft, 0, 1, Color.Gray),
+                new(limitsRight, 0, 1, Color.Gray)
+            };
+
+            PlotterForms.Program.ShowGraph(graphData);
         }
     }
 }

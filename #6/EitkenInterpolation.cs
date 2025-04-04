@@ -1,48 +1,36 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace _6
+﻿namespace _6
 {
-    public class EitkenInterpolation
+    public class EitkenInterpolation : InterpolationBase
     {
-        private Dictionary<double, double> _points;
-
-        public EitkenInterpolation(Dictionary<double, double> dataPoints)
-        {
-            _points = new Dictionary<double, double>(dataPoints);
-        }
+        public EitkenInterpolation(List<(double x, double y)> dataPoints)
+            : base(dataPoints) { }
 
         public double Compute(double x, bool useWrite = true)
         {
-            int n = _points.Count;
-            List<double> xValues = new List<double>(_points.Keys);
-            List<double> yValues = new List<double>(_points.Values);
+            double[,] p = new double[PointsCount, PointsCount];
 
-            double[,] p = new double[n, n];
-
-            for (int i = 0; i < n; i++)
+            for (int i = 0; i < PointsCount; i++)
             {
-                p[i, 0] = yValues[i];
+                p[i, 0] = _points[i].y;
             }
 
-            for (int j = 1; j < n; j++)
+            for (int j = 1; j < PointsCount; j++)
             {
-                for (int i = 0; i < n - j; i++)
+                for (int i = 0; i < PointsCount - j; i++)
                 {
-                    p[i, j] = ((x - xValues[i + j]) * p[i, j - 1] - (x - xValues[i]) * p[i + 1, j - 1]) / (xValues[i] - xValues[i + j]);
+                    p[i, j] = ((x - _points[i + j].x) * p[i, j - 1] - (x - _points[i].x) * p[i + 1, j - 1]) / (_points[i].x - _points[i + j].x);
 
-                    if (useWrite) Console.WriteLine($"P[{i},{j}] = (({x} - {xValues[i + j]}) * {p[i, j - 1]:F6} - ({x} - {xValues[i]}) * {p[i + 1, j - 1]:F6}) / ({xValues[i]} - {xValues[i + j]}) = {p[i, j]:F6}");
+                    if (useWrite) Console.WriteLine($"P[{i},{j}] = (({x} - {_points[i + j].x}) * {p[i, j - 1]:F6} - ({x} - {_points[i]}) * {p[i + 1, j - 1]:F6}) / ({_points[i].x} - {_points[i + j].x}) = {p[i, j]:F6}");
                 }
             }
 
-            return p[0, n - 1];
+            return p[0, PointsCount - 1];
         }
 
         public void SolveAndPrint(double x)
         {
+            Console.WriteLine("\nЭйткен:\n");
+
             double result = Compute(x);
 
             Console.WriteLine($"\nРезультат интерполяции Эйткена: P({x}) = {result:F6}");

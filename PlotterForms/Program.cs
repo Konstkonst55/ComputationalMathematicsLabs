@@ -18,19 +18,21 @@ namespace PlotterForms
             };
 
             var form = new Graph();
-            form.PlotPoints(dataPoints);
+            form.PlotPoints(new GraphParameters(dataPoints));
+
             Application.Run(form);
         }
 
-        public static void ShowGraph(List<List<(double x, double y)>> points)
+        public static void ShowGraph(List<GraphParameters> points)
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
+
             var form = new Graph();
 
-            foreach (var pointList in points)
+            foreach (var data in points)
             {
-                form.PlotPoints(pointList);
+                form.PlotPoints(data);
             }
 
             Application.Run(form);
@@ -40,8 +42,10 @@ namespace PlotterForms
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
+
             var form = new Graph();
             form.PlotSinglePoint(x, y);
+
             Application.Run(form);
         }
     }

@@ -1,33 +1,29 @@
-﻿namespace _7
+﻿using _6;
+using Shared;
+
+namespace _7
 {
-    public class CubicSplineInterpolation
+    public class CubicSplineInterpolation : InterpolationBase
     {
-        private double[] _xPoints;
-        private double[] _yPoints;
         private double[] _segmentLengths;
         private double[] _slopes;
         private double[] _splineCoefficients;
 
-        public CubicSplineInterpolation(List<(double x, double y)> points)
+        public CubicSplineInterpolation(List<(double x, double y)> dataPoints)
+            : base(dataPoints)
         {
-            if (points.Count < 3)
-            {
-                throw new ArgumentException("Для кубического сплайна требуется минимум 3 точки");
-            }
-
-            _xPoints = points.Select(p => p.x).ToArray();
-            _yPoints = points.Select(p => p.y).ToArray();
-            int numSegments = _xPoints.Length - 1;
+            int numSegments = PointsCount - 1;
 
             _segmentLengths = new double[numSegments];
             _slopes = new double[numSegments];
+            _splineCoefficients = new double[PointsCount];
 
-            PrintListAsTable(points, "Исходные данные");
+            Printer.PrintListAsTable(_points, "Исходные данные");
 
             for (int i = 0; i < numSegments; i++)
             {
-                _segmentLengths[i] = _xPoints[i + 1] - _xPoints[i];
-                _slopes[i] = (_yPoints[i + 1] - _yPoints[i]) / _segmentLengths[i];
+                _segmentLengths[i] = _points[i + 1].x - _points[i].x;
+                _slopes[i] = (_points[i + 1].y - _points[i].y) / _segmentLengths[i];
             }
 
             Console.WriteLine("\nВычисленные длины сегментов (h_i):");
@@ -61,12 +57,10 @@
                 results[i] = _slopes[i + 1] - _slopes[i];
             }
 
-            PrintMatrix(matrix, results);
+            Printer.PrintMatrix(matrix, results);
 
             GaussianElimination gauss = new GaussianElimination(matrix, results);
             double[] solution = gauss.Solve();
-
-            _splineCoefficients = new double[_xPoints.Length];
 
             for (int i = 1; i < _splineCoefficients.Length - 1; i++)
             {
@@ -84,16 +78,13 @@
             if (useWrite)
             {
                 Console.WriteLine($"\nВычисление S({x}):");
-                Console.WriteLine($"Точка x = {x} лежит в промежутке [{_xPoints[index - 1]}; {_xPoints[index]}], значит index = {index}");
+                Console.WriteLine($"Точка x = {x} лежит в промежутке [{_points[index - 1].x}; {_points[index].x}], значит index = {index}");
             }
 
-            double x0 = _xPoints[index - 1];
-            double x1 = _xPoints[index];
-            double y0 = _yPoints[index - 1];
-            double y1 = _yPoints[index];
+            double x0 = _points[index - 1].x, x1 = _points[index].x;
+            double y0 = _points[index - 1].y, y1 = _points[index].y;
+            double m0 = _splineCoefficients[index - 1], m1 = _splineCoefficients[index];
             double h = _segmentLengths[index - 1];
-            double m0 = _splineCoefficients[index - 1];
-            double m1 = _splineCoefficients[index];
 
             double[] terms =
             {
@@ -112,51 +103,15 @@
 
         private int FindSegment(double x)
         {
-            for (int i = 1; i < _xPoints.Length; i++)
+            for (int i = 1; i < PointsCount; i++)
             {
-                if (x <= _xPoints[i])
+                if (x <= _points[i].x)
                 {
                     return i;
                 }
             }
 
-            return _xPoints.Length - 1;
-        }
-
-        private void PrintMatrix(double[,] matrix, double[] results, string title = "")
-        {
-            int size = results.Length;
-
-            if (title.Length > 0)
-            {
-                Console.WriteLine("\n" + title);
-            }
-
-            for (int i = 0; i < size; i++)
-            {
-                for (int j = 0; j < size; j++)
-                {
-                    Console.Write($"{matrix[i, j], 8:F4} ");
-                }
-
-                Console.WriteLine($" | {results[i], 8:F4}");
-            }
-        }
-
-        private void PrintListAsTable(List<(double x, double y)> points, string title)
-        {
-            if (title.Length > 0)
-            {
-                Console.WriteLine(title + "\n");
-            }
-
-            Console.WriteLine("{0,-15} {1,-15}", "X", "Y");
-            Console.WriteLine(new string('-', 30));
-
-            foreach (var (x, y) in points)
-            {
-                Console.WriteLine("{0,-15:F2} {1,-15:F6}", x, y);
-            }
+            return PointsCount - 1;
         }
     }
 }
