@@ -1,6 +1,8 @@
-﻿namespace _5
+﻿using Shared;
+
+namespace _5
 {
-    public class NewtonMethodInverse : FunctionBase
+    public class NewtonMethodInverse : PrecisionSettings
     {
         protected readonly Func<double[], double[]> _functions;
         protected readonly Func<double[], double[,]> _jacobian;

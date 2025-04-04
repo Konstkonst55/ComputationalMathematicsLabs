@@ -38,6 +38,7 @@
                 if (HasConverged(previousSolution, currentSolution))
                 {
                     PrintVector(currentSolution, "\nРешение найдено:");
+
                     return;
                 }
             }

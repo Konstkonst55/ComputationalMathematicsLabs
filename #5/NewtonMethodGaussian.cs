@@ -1,4 +1,6 @@
-﻿namespace _5
+﻿using Shared;
+
+namespace _5
 {
     public class NewtonMethodGaussian : NewtonMethodInverse
     {

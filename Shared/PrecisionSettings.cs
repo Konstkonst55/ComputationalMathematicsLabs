@@ -1,11 +1,11 @@
-﻿namespace _5
+﻿namespace Shared
 {
-    public abstract class FunctionBase
+    public abstract class PrecisionSettings
     {
         protected readonly double _tolerance;
         private readonly int _precision;
 
-        public FunctionBase(double tolerance = 1e-6)
+        protected PrecisionSettings(double tolerance = 1e-6)
         {
             _tolerance = tolerance;
             _precision = Math.Max(1, (int)Math.Ceiling(-Math.Log10(tolerance)) + 1);

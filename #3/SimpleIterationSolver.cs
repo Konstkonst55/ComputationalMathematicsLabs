@@ -14,8 +14,8 @@
             int size = matrix.GetLength(0);
             _coefficientsMatrix = matrix;
             _constantsVector = results;
-            this._epsilon = epsilon;
-            this._maxIterations = maxIterations;
+            _epsilon = epsilon;
+            _maxIterations = maxIterations;
 
             _iterationMatrix = new double[size, size];
             _iterationVector = new double[size];
@@ -70,6 +70,7 @@
                 if (HasConverged(previousSolution, currentSolution))
                 {
                     PrintVector(currentSolution, "\nРешение найдено:");
+
                     return;
                 }
 
