@@ -1,3 +1,5 @@
+using Shared;
+
 namespace PlotterForms
 {
     public static class Program

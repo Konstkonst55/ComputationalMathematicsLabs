@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Linq;
-using System.Windows.Forms;
-using ScottPlot;
+﻿using ScottPlot;
+using Shared;
 using Color = System.Drawing.Color;
 
 namespace PlotterForms
@@ -16,7 +12,6 @@ namespace PlotterForms
             InitializePlot();
         }
 
-        private readonly double _axisLimit = 100;
         private readonly FormsPlot formsPlot = new FormsPlot();
 
         private void InitializePlot()
@@ -28,25 +23,48 @@ namespace PlotterForms
 
         private void CenterAxes()
         {
-            formsPlot.Plot.SetAxisLimits(-10, 10, -10, 10);
+            formsPlot.Plot.AddHorizontalLine(0, Color.Black, 1);
+            formsPlot.Plot.AddVerticalLine(0, Color.Black, 1);
+        }
 
-            formsPlot.Plot.AddLine(-_axisLimit, 0, _axisLimit, 0, Color.Black, 1); 
-            formsPlot.Plot.AddLine(0, -_axisLimit, 0, _axisLimit, Color.Black, 1);
+        private void CenterAndFit(double[] xs, double[] ys)
+        {
+            double minX = xs.Min();
+            double maxX = xs.Max();
+            double minY = ys.Min();
+            double maxY = ys.Max();
 
-            formsPlot.Plot.XAxis.Ticks(true);
-            formsPlot.Plot.YAxis.Ticks(true);
+            double dataWidth = maxX - minX;
+            double dataHeight = maxY - minY;
 
-            formsPlot.Render();
+            double paddingRatio = 0.1;
+
+            double xPadding = dataWidth * paddingRatio;
+            double yPadding = dataHeight * paddingRatio;
+
+            double finalMinX = minX - xPadding;
+            double finalMaxX = maxX + xPadding;
+
+            double finalMinY = minY - yPadding;
+            double finalMaxY = maxY + yPadding;
+
+            formsPlot.Plot.SetAxisLimits(finalMinX, finalMaxX, finalMinY, finalMaxY);
         }
 
         public void PlotPoints(GraphParameters param)
         {
-            CenterAxes();
-
             double[] xs = param.Points.Select(p => p.x).ToArray();
             double[] ys = param.Points.Select(p => p.y).ToArray();
 
             formsPlot.Plot.AddScatter(xs, ys, markerSize: param.MarkerSize, lineWidth: param.LineWidth, color: param.Color);
+
+            formsPlot.Plot.AxisScaleLock(false);
+
+            if (param.IsCentered)
+            {
+                CenterAndFit(xs, ys);
+            }
+
             formsPlot.Render();
         }
 

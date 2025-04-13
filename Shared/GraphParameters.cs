@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Color = System.Drawing.Color;
 
-namespace PlotterForms
+namespace Shared
 {
     public struct GraphParameters
     {
@@ -12,13 +8,15 @@ namespace PlotterForms
         public float MarkerSize { get; set; }
         public float LineWidth { get; set; }
         public Color? Color { get; set; }
+        public bool IsCentered { get; set; }
 
-        public GraphParameters(List<(double x, double y)> points, float markerSize = 5, float lineWidth = 1, Color? color = null)
+        public GraphParameters(List<(double x, double y)> points, float markerSize = 5, float lineWidth = 1, Color? color = null, bool isCentered = false)
         {
             Points = points ?? throw new ArgumentNullException(nameof(points));
             MarkerSize = markerSize;
             LineWidth = lineWidth;
             Color = color;
+            IsCentered = isCentered;
         }
     }
 }
