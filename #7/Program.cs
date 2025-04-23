@@ -4,10 +4,10 @@ namespace _7
 {
     internal class Program
     {
-        static Func<double, double> function = Math.Sqrt;
+        static Func<double, double> function = x => 1 / x;
 
-        const double xMin = 0.0, xStep = 0.2, xTarget = 2.56;
-        const int xCount = 10;
+        const double xMin = 0.5, xStep = 3, xTarget = 2.56;
+        const int xCount = 5;
 
         static List<(double x, double y)> dataPoints = ListUtils.FillDataPoints(function, xMin, xStep, xCount);
 
@@ -18,7 +18,7 @@ namespace _7
         {
             csInterpolator.Compute(xTarget);
 
-            PlotterForms.Program.ShowGraph(GraphGenerator.GenerateData(csInterpolator, function, xMin, xStep, xCount));
+            PlotterForms.Program.ShowGraph(GraphGenerator.GenerateData(csInterpolator, function, xMin));
         }
     }
 }

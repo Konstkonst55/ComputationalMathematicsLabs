@@ -18,6 +18,8 @@ namespace _8
             Printer.PrintListAsTable(dataPoints, "Исходные данные");
 
             interpolator.Compute(xTarget);
+
+            PlotterForms.Program.ShowGraph(GraphGenerator.GenerateTrigonometricData(interpolator, function, xMin));
         }
     }
 }
