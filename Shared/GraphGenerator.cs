@@ -42,8 +42,8 @@ namespace Shared
             List<GraphParameters> graphData = new()
             {
                 new(xyValues, 0, 6, Color.Red),
-                new(dataPoints, 10, 0, Color.Blue),
-                new(viewDataPoints, 0, 2, Color.Blue, true),
+                new(dataPoints, 10, 0, Color.Green),
+                new(viewDataPoints, 0, 2, Color.Green, true),
             };
 
             return graphData;
@@ -51,7 +51,7 @@ namespace Shared
 
         public static List<GraphParameters> GenerateTrigonometricData(InterpolationBase<Complex> interpolator, Func<double, double> function, double xMin)
         {
-            const double step = 0.01, margin = 1, smoothing = 100.0;
+            const double step = 0.01, margin = 0.5, smoothing = 100.0;
 
             List<(double x, double y)> dataPoints = interpolator.GetPoints();
             List<(double x, double y)> realValues = new();
@@ -96,9 +96,9 @@ namespace Shared
             List<GraphParameters> graphData = new()
             {
                 new(realValues, 0, 6, Color.Red, true),
-                new(imaginaryValues, 0, 6, Color.Green, false),
+                new(imaginaryValues, 0, 6, Color.Green),
                 new(dataPoints, 10, 0, Color.Blue),
-                new(viewDataPoints, 0, 2, Color.Blue, false)
+                new(viewDataPoints, 0, 2, Color.Blue)
             };
 
             return graphData;
