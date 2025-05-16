@@ -4,7 +4,7 @@ namespace _10
 {
     internal class Program
     {
-        static Func<double, double> function = x => Math.Pow(x, 2);
+        static Func<double, double> function = x => Math.Sin(x);
         static List<Func<double, double>> basis = new()
         {
             x => 1,
@@ -23,7 +23,9 @@ namespace _10
 
             Approximation approximation = new LeastSquaresApproximator(dataPoints, basis);
 
-            approximation.Compute();
+            var approximatedFunction = approximation.Compute();
+
+            PlotterForms.Program.ShowGraph(GraphGenerator.GenerateApproximationData(function, approximatedFunction, xMin, xStep, xCount));
         }
     }
 }

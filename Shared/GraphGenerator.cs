@@ -1,5 +1,6 @@
 ﻿using System.Drawing;
 using System.Numerics;
+using System.Runtime.InteropServices;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Shared
@@ -99,6 +100,27 @@ namespace Shared
                 new(imaginaryValues, 0, 6, Color.Green),
                 new(dataPoints, 10, 0, Color.Blue),
                 new(viewDataPoints, 0, 2, Color.Blue)
+            };
+
+            return graphData;
+        }
+
+        public static List<GraphParameters> GenerateApproximationData(Func<double, double> function, Func<double, double> approximatedFunction, double xMin, double xStep, int xCount)
+        {
+            const double smoothing = 1.0;
+            double viewStep = xStep / smoothing, xMax = xMin + xStep * xCount;
+            
+            int viewCount = Convert.ToInt32(((xMax - xMin) / viewStep) + 1);
+
+            var dataPoints = ListUtils.FillDataPoints(function, xMin, xStep, xCount);
+            var viewDataPoints = ListUtils.FillDataPoints(function, xMin, viewStep, viewCount);
+            var approximatedDataPoints = ListUtils.FillDataPoints(function, xMin, viewStep, viewCount);
+
+            List<GraphParameters> graphData = new()
+            {
+                new(dataPoints, 10, 0, Color.Blue),
+                new(viewDataPoints, 0, 2, Color.Blue),
+                new(approximatedDataPoints, 0, 2, Color.Red, true)
             };
 
             return graphData;
